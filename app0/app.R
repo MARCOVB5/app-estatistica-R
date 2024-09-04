@@ -38,7 +38,7 @@ ui <- fluidPage(
       numericInput("obs", "Média :", 1, min = -100, max = 100, width = "100%"),
       numericInput("obs2", "Valor Z :", 1, min = -3, max = 3, width = "100%"),
       numericInput("obs3", "Desvio Padrão :", 1, min = 0.1, max = 1000, width = "100%"),
-      numericInput("obs4", "Tamanho Amostra :", 1, min = 1, max = 1000, width = "100%"),
+      numericInput("obs4", "Tamanho Amostra (n) :", 1, min = 1, max = 1000, width = "100%"),
       
       textOutput("value"),
       textOutput("value2")
