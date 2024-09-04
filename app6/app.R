@@ -41,4 +41,12 @@ ui <- fluidPage(
   )
 )
 
+server <- function(input, output) {
+  output$t_paired <- renderText({
+    t_stat <- input$mean_diff / (input$sd_diff / sqrt(input$sample_size))
+    paste("Valor do Teste t-Pareado:", round(t_stat, 4))
+  })
+}
+
+shinyApp(ui, server)
 
