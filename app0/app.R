@@ -1,7 +1,6 @@
 library(shiny)
 
 ui <- fluidPage(
-  # Add some CSS styles
   tags$head(
     tags$style(HTML("
       .container-fluid {
@@ -28,12 +27,10 @@ ui <- fluidPage(
     "))
   ),
   
-  # App title
   div(class = "header",
       h1("Calculation App")
   ),
   
-  # Main content
   div(class = "well",
       numericInput("obs", "Média :", 1, min = -100, max = 100, width = "100%"),
       numericInput("obs2", "Valor Z :", 1, min = -3, max = 3, width = "100%"),
