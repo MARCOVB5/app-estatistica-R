@@ -1,52 +1,42 @@
+# Carregar a biblioteca shiny
 library(shiny)
 
+# Definir a interface do usuário
 ui <- fluidPage(
-  tags$head(
-    tags$style(HTML("
-      .container-fluid {
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      .well {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-      .output-text {
-        font-size: 16px;
-        color: #333;
-      }
-      .numeric-input {
-        margin-bottom: 15px;
-      }
-      .header {
-        text-align: center;
-        margin-bottom: 30px;
-      }
-    "))
-  ),
-  
-  div(class = "header",
-      h1("Distribuição Hipergeométrica")
-  ),
-  
-  div(class = "well",
-      numericInput("red_balls", "Número de Bolas Vermelhas:", 4, min = 0, max = 10, width = "100%"),
-      numericInput("blue_balls", "Número de Bolas Azuis:", 6, min = 0, max = 10, width = "100%"),
-      numericInput("drawn_balls", "Número de Bolas Retiradas:", 3, min = 1, max = 10, width = "100%"),
-      numericInput("successes", "Número de Sucessos Desejado (Bolas Vermelhas):", 2, min = 0, max = 3, width = "100%"),
-      
-      textOutput("hypergeometric_prob")
-  )
+    titlePanel("Cálculo de Probabilidade Hipergeométrica"),
+    
+    sidebarLayout(
+        sidebarPanel(
+            numericInput("m", "Número total de bolas vermelhas (m):", value = 4, min = 0),
+            numericInput("n", "Número total de bolas azuis (n):", value = 6, min = 0),
+            numericInput("k", "Número de bolas retiradas (k):", value = 3, min = 1),
+            numericInput("x", "Número de bolas vermelhas desejadas (x):", value = 2, min = 0),
+            actionButton("calculate", "Calcular")
+        ),
+        
+        mainPanel(
+            h3("Resultado"),
+            textOutput("result")
+        )
+    )
 )
 
+# Definir a lógica do servidor
 server <- function(input, output) {
-  output$t_paired <- renderText({
-    t_stat <- input$mean_diff / (input$sd_diff / sqrt(input$sample_size))
-    paste("Valor do Teste t-Pareado:", round(t_stat, 4))
-  })
+    observeEvent(input$calculate, {
+        # Número total de bolas
+        total <- input$m + input$n
+        
+        # Calcular a probabilidade usando a distribuição hipergeométrica
+        prob <- dhyper(input$x, input$m, input$n, input$k)
+        
+        # Exibir o resultado
+        output$result <- renderText({
+            paste("A probabilidade de extrair exatamente", input$x, "bolas vermelhas é:", round(prob, 4))
+        })
+    })
 }
 
-shinyApp(ui, server)
+# Rodar o aplicativo Shiny
+shinyApp(ui = ui, server = server)
 
