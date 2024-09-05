@@ -1,28 +1,29 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("#4: Regressão Linear Simples"),
+  titlePanel("#2: Teste de Hipótese para Média"),
   
   sidebarLayout(
     sidebarPanel(
-      numericInput("slope", "Coeficiente Angular (β1):", 0.5, min = -10, max = 10, step = 0.01),
-      numericInput("intercept", "Intercepto (β0):", 2, min = -100, max = 100),
-      numericInput("independent", "Valor da Variável Independente (X):", 10, min = -100, max = 100),
+      numericInput("sample_mean", "Média Amostral:", 50, min = -100, max = 100),
+      numericInput("pop_mean", "Média Populacional (H0):", 50, min = -100, max = 100),
+      numericInput("sample_sd", "Desvio Padrão Amostral:", 8, min = 0.1, max = 1000),
+      numericInput("sample_size", "Tamanho da Amostra:", 40, min = 1, max = 1000),
       actionButton("calc", "Calcular")
     ),
     
     mainPanel(
-      h4("Valor Previsto (Y):"),
-      verbatimTextOutput("predicted_value")
+      h4("Valor do Teste t:"),
+      verbatimTextOutput("t_value")
     )
   )
 )
 
 server <- function(input, output) {
   observeEvent(input$calc, {
-    output$predicted_value <- renderText({
-      y_hat <- input$intercept + input$slope * input$independent
-      paste(round(y_hat, 4))
+    output$t_value <- renderText({
+      t_stat <- (input$sample_mean - input$pop_mean) / (input$sample_sd / sqrt(input$sample_size))
+      paste(round(t_stat, 4))
     })
   })
 }

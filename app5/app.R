@@ -1,28 +1,29 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("#5: Teste t-Pareado"),
+  titlePanel("#3: Teste de Hipótese para Proporção"),
   
   sidebarLayout(
     sidebarPanel(
-      numericInput("mean_diff", "Média das Diferenças (d̄):", 5, min = -100, max = 100),
-      numericInput("sd_diff", "Desvio Padrão das Diferenças (sd):", 2, min = 0.1, max = 1000),
-      numericInput("sample_size", "Tamanho da Amostra:", 15, min = 1, max = 1000),
+      numericInput("successes", "Número de Sucessos:", 150, min = 0, max = 250),
+      numericInput("sample_size", "Tamanho da Amostra:", 250, min = 1, max = 1000),
+      numericInput("pop_proportion", "Proporção Populacional (H0):", 0.5, min = 0, max = 1, step = 0.01),
       actionButton("calc", "Calcular")
     ),
     
     mainPanel(
-      h4("Valor do Teste t-Pareado:"),
-      verbatimTextOutput("t_paired")
+      h4("Valor do Teste z:"),
+      verbatimTextOutput("z_value")
     )
   )
 )
 
 server <- function(input, output) {
   observeEvent(input$calc, {
-    output$t_paired <- renderText({
-      t_stat <- input$mean_diff / (input$sd_diff / sqrt(input$sample_size))
-      paste(round(t_stat, 4))
+    output$z_value <- renderText({
+      p_hat <- input$successes / input$sample_size
+      z_stat <- (p_hat - input$pop_proportion) / sqrt(input$pop_proportion * (1 - input$pop_proportion) / input$sample_size)
+      paste(round(z_stat, 4))
     })
   })
 }

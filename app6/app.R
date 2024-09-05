@@ -1,42 +1,31 @@
-# Carregar a biblioteca shiny
 library(shiny)
 
-# Definir a interface do usuário
 ui <- fluidPage(
-    titlePanel("Cálculo de Probabilidade Hipergeométrica"),
+  titlePanel("#4: Regressão Linear Simples"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("slope", "Coeficiente Angular (β1):", 0.5, min = -10, max = 10, step = 0.01),
+      numericInput("intercept", "Intercepto (β0):", 2, min = -100, max = 100),
+      numericInput("independent", "Valor da Variável Independente (X):", 10, min = -100, max = 100),
+      actionButton("calc", "Calcular")
+    ),
     
-    sidebarLayout(
-        sidebarPanel(
-            numericInput("m", "Número total de bolas vermelhas (m):", value = 4, min = 0),
-            numericInput("n", "Número total de bolas azuis (n):", value = 6, min = 0),
-            numericInput("k", "Número de bolas retiradas (k):", value = 3, min = 1),
-            numericInput("x", "Número de bolas vermelhas desejadas (x):", value = 2, min = 0),
-            actionButton("calculate", "Calcular")
-        ),
-        
-        mainPanel(
-            h3("Resultado"),
-            textOutput("result")
-        )
+    mainPanel(
+      h4("Valor Previsto (Y):"),
+      verbatimTextOutput("predicted_value")
     )
+  )
 )
 
-# Definir a lógica do servidor
 server <- function(input, output) {
-    observeEvent(input$calculate, {
-        # Número total de bolas
-        total <- input$m + input$n
-        
-        # Calcular a probabilidade usando a distribuição hipergeométrica
-        prob <- dhyper(input$x, input$m, input$n, input$k)
-        
-        # Exibir o resultado
-        output$result <- renderText({
-            paste("A probabilidade de extrair exatamente", input$x, "bolas vermelhas é:", round(prob, 4))
-        })
+  observeEvent(input$calc, {
+    output$predicted_value <- renderText({
+      y_hat <- input$intercept + input$slope * input$independent
+      paste(round(y_hat, 4))
     })
+  })
 }
 
-# Rodar o aplicativo Shiny
-shinyApp(ui = ui, server = server)
+shinyApp(ui, server)
 

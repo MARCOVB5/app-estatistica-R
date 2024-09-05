@@ -1,32 +1,32 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("#2: Teste de Hipótese para Média"),
+  titlePanel("Cálculo de Tamanho Amostral para Estimar a Média"),
   
   sidebarLayout(
     sidebarPanel(
-      numericInput("sample_mean", "Média Amostral:", 50, min = -100, max = 100),
-      numericInput("pop_mean", "Média Populacional (H0):", 50, min = -100, max = 100),
-      numericInput("sample_sd", "Desvio Padrão Amostral:", 8, min = 0.1, max = 1000),
-      numericInput("sample_size", "Tamanho da Amostra:", 40, min = 1, max = 1000),
-      actionButton("calc", "Calcular")
+      numericInput("conf_level_mean", "Nível de Confiança (%)", 95, min = 90, max = 99, step = 1),
+      numericInput("error_margin_mean", "Margem de Erro (cm)", 2, min = 0.1, step = 0.1),
+      numericInput("std_dev_mean", "Desvio Padrão Populacional (cm)", 10, min = 1, step = 0.1),
+      actionButton("calc_mean", "Calcular Tamanho Amostral")
     ),
     
     mainPanel(
-      h4("Valor do Teste t:"),
-      verbatimTextOutput("t_value")
+      h4("Resultado"),
+      verbatimTextOutput("sample_size_mean")
     )
   )
 )
 
 server <- function(input, output) {
-  observeEvent(input$calc, {
-    output$t_value <- renderText({
-      t_stat <- (input$sample_mean - input$pop_mean) / (input$sample_sd / sqrt(input$sample_size))
-      paste(round(t_stat, 4))
+  
+  observeEvent(input$calc_mean, {
+    z_value_mean <- qnorm((input$conf_level_mean / 100) + (1 - input$conf_level_mean / 100) / 2)
+    n_mean <- (z_value_mean * input$std_dev_mean / input$error_margin_mean) ^ 2
+    output$sample_size_mean <- renderText({
+      paste("Tamanho amostral necessário para estimar a média:", ceiling(n_mean), "alunos")
     })
   })
 }
 
 shinyApp(ui, server)
-

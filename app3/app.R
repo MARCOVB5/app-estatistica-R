@@ -1,29 +1,30 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("#3: Teste de Hipótese para Proporção"),
+  titlePanel("Cálculo de Tamanho Amostral para Estimar a Proporção"),
   
   sidebarLayout(
     sidebarPanel(
-      numericInput("successes", "Número de Sucessos:", 150, min = 0, max = 250),
-      numericInput("sample_size", "Tamanho da Amostra:", 250, min = 1, max = 1000),
-      numericInput("pop_proportion", "Proporção Populacional (H0):", 0.5, min = 0, max = 1, step = 0.01),
-      actionButton("calc", "Calcular")
+      numericInput("conf_level_prop", "Nível de Confiança (%)", 90, min = 90, max = 99, step = 1),
+      numericInput("error_margin_prop", "Margem de Erro (%)", 5, min = 0.1, max = 10, step = 0.1),
+      actionButton("calc_prop", "Calcular Tamanho Amostral")
     ),
     
     mainPanel(
-      h4("Valor do Teste z:"),
-      verbatimTextOutput("z_value")
+      h4("Resultado"),
+      verbatimTextOutput("sample_size_prop")
     )
   )
 )
 
 server <- function(input, output) {
-  observeEvent(input$calc, {
-    output$z_value <- renderText({
-      p_hat <- input$successes / input$sample_size
-      z_stat <- (p_hat - input$pop_proportion) / sqrt(input$pop_proportion * (1 - input$pop_proportion) / input$sample_size)
-      paste(round(z_stat, 4))
+  
+  observeEvent(input$calc_prop, {
+    z_value_prop <- qnorm((input$conf_level_prop / 100) + (1 - input$conf_level_prop / 100) / 2)
+    p <- 0.5 
+    n_prop <- (z_value_prop ^ 2 * p * (1 - p)) / (input$error_margin_prop / 100) ^ 2
+    output$sample_size_prop <- renderText({
+      paste("Tamanho amostral necessário para estimar a proporção:", ceiling(n_prop), "clientes")
     })
   })
 }
