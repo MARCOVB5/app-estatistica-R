@@ -1,7 +1,7 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("#1: Intervalo de Confiança para Proporção"),
+  titlePanel("Intervalo de Confiança para Proporção"),
   
   sidebarLayout(
     sidebarPanel(

@@ -1,7 +1,7 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("#3: Teste de Hipótese para Proporção"),
+  titlePanel("Teste de Hipótese para Proporção"),
   
   sidebarLayout(
     sidebarPanel(

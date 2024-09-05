@@ -1,7 +1,7 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("#4: Regressão Linear Simples"),
+  titlePanel("Regressão Linear Simples"),
   
   sidebarLayout(
     sidebarPanel(

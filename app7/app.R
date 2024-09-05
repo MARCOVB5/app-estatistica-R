@@ -1,7 +1,7 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("#5: Teste t-Pareado"),
+  titlePanel("Teste t-Pareado"),
   
   sidebarLayout(
     sidebarPanel(
