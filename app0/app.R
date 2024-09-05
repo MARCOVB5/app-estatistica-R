@@ -1,13 +1,13 @@
 library(shiny)
 
 ui <- fluidPage(
-  titlePanel("App 0"),
+  titlePanel("#0: Intervalo de Confiança para Média"),
   
   sidebarLayout(
     sidebarPanel(
-      numericInput("obs", "Média:", 1, min = -100, max = 100),
-      numericInput("obs2", "Valor Z:", 1, min = -3, max = 3),
-      numericInput("obs3", "Desvio Padrão:", 1, min = 0.1, max = 1000),
+      numericInput("obs", "Média (μ):", 1, min = -100, max = 100),
+      numericInput("obs2", "Valor Crítico (Z):", 1, min = -3, max = 3),
+      numericInput("obs3", "Desvio Padrão (σ):", 1, min = 0.1, max = 1000),
       numericInput("obs4", "Tamanho Amostra (n):", 1, min = 1, max = 1000),
       actionButton("calc", "Calcular")
     ),
